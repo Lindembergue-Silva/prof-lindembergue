@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prof-Lindembergue-Música nas Culturas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .slide {
+            display: none;
+            padding: 20px;
+        }
+        .active {
+            display: block;
+        }
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 15px;
+            border: none;
+            background-color: #007BFF;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .questions {
+            margin-top: 20px;
+            display: none;
+        }
+        .question {
+            margin-bottom: 15px;
+        }
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000; /* Removendo a transparência */
+            color: white;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 1000;
+        }
+        p {
+        text-align: justify;
+    }
+    </style>
+   
+</head>
+<body>
+    <div class="container" style="background-color: #92beee;">
+        <div class="slide active">
+            <h2>Música como Expressão Cultural</h2>
+            <p id="jj">A música é uma das formas mais poderosas de expressão cultural, refletindo as vivências, tradições e valores de uma sociedade. Desde os tempos antigos, a música tem sido utilizada em rituais, celebrações e até mesmo como meio de resistência.</p>
+        </div>
+        <div class="slide">
+            <h2>Funções da Música</h2>
+            <p>Através da apreciação musical, podemos compreender como a música não é apenas uma forma de arte, mas também um veículo de comunicação e um reflexo das identidades culturais.</p>
+        </div>
+        <div class="slide">
+            <h2>Importância da Música</h2>
+            <p>As práticas musicais estão intimamente ligadas a outras dimensões da vida social, como a religião, a política e a economia, mostrando como a música é uma parte integral da experiência humana.</p>
+        </div>
+        <div class="questions" id="questions">
+            <h3>Questões de Múltipla Escolha</h3>
+            <div class="question">
+                <p>1. Qual é uma das principais funções da música nas culturas?</p>
+                <label><input type="radio" name="q1" value="A"> A) Apenas entreter</label><br>
+                <label><input type="radio" name="q1" value="B"> B) Refletir tradições e valores</label><br>
+                <label><input type="radio" name="q1" value="C"> C) Ser uma forma de comunicação sem significado</label>
+            </div>
+            <div class="question">
+                <p>2. Como a música pode influenciar a vida social?</p>
+                <label><input type="radio" name="q2" value="A"> A) Promovendo isolamento</label><br>
+                <label><input type="radio" name="q2" value="B"> B) Servindo como meio de protesto e resistência</label><br>
+                <label><input type="radio" name="q2" value="C"> C) Sendo exclusivamente uma forma de lazer</label>
+            </div>
+            <div class="question">
+                <p>3. Em que contexto a música é frequentemente utilizada?</p>
+                <label><input type="radio" name="q3" value="A"> A) Somente em festas</label><br>
+                <label><input type="radio" name="q3" value="B"> B) Em rituais e celebrações</label><br>
+                <label><input type="radio" name="q3" value="C"> C) Apenas em concertos</label>
+            </div>
+            <div class="question">
+                <p>4. Qual dimensão da vida social a música pode refletir?</p>
+                <label><input type="radio" name="q4" value="A"> A) Apenas a dimensão estética</label><br>
+                <label><input type="radio" name="q4" value="B"> B) Dimensões política e econômica</label><br>
+                <label><input type="radio" name="q4" value="A"> C) Somente a dimensão histórica</label>
+            </div>
+            <div class="question">
+                <p>5. A apreciação musical pode ajudar na compreensão de quais aspectos?</p>
+                <label><input type="radio" name="q5" value="A"> A) Apenas a técnica musical</label><br>
+                <label><input type="radio" name="q5" value="B"> B) Usos e funções da música em contextos sociais</label><br>
+                <label><input type="radio" name="q5" value="C"> C) Somente as preferências pessoais</label>
+            </div>
+            <button onclick="calculateScore()">Verificar Respostas</button>
+            <div class="result" id="result"></div>
+        </div>
+        <div class="navigation">
+            <button onclick="prevSlide()">Anterior</button>
+            <button onclick="nextSlide()">Próximo</button>
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay">
+        <div id="overlayContent"></div>
+        <button onclick="closeOverlay()">Fechar</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        let hasSubmitted = false;
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.toggle('active', i === index);
+            });
+        }
+
+        function nextSlide() {
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                showSlide(currentSlide);
+            } else if (currentSlide === slides.length - 1) {
+                document.getElementById('questions').style.display = 'block';
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                showSlide(currentSlide);
+            }
+        }
+
+        function calculateScore() {
+            if (hasSubmitted) return; // Impede nova submissão
+            hasSubmitted = true;
+
+            let score = 0;
+            const answers = {
+                q1: 'B', // Resposta correta
+                q2: 'B', // Resposta correta
+                q3: 'B', // Resposta correta
+                q4: 'B', // Resposta correta
+                q5: 'B'  // Resposta correta
+            };
+
+            // Adicionando respostas corretas alternativas
+            const alternativeAnswers = {
+                q1: ['A', 'B'], // A e B são corretas
+                q2: ['B'], // Apenas B é correta
+                q3: ['B'], // Apenas B é correta
+                q4: ['B'], // Apenas B é correta
+                q5: ['B']  // Apenas B é correta
+            };
+
+            for (let i = 1; i <= 5; i++) {
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                if (selected && alternativeAnswers[`q${i}`].includes(selected.value)) {
+                    score += 2;
+                }
+            }
+
+            document.getElementById('overlayContent').innerText = `Você acertou ${score} pontos.`;
+            document.getElementById('overlay').style.display = 'flex';
+        }
+
+        function closeOverlay() {
+            document.getElementById('overlay').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
